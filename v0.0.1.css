@@ -52,6 +52,15 @@ li span{
     color: #333;
 }*/
 
+.log{
+	background-color: black;
+	color:white;
+}
+
+.refreshLabel{
+	margin-left:900px;
+}
+
 .login{
 	float:right;
 	margin-right: 40px;

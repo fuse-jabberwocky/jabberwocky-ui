@@ -37,12 +37,27 @@
                     });
                 });
 
-                $("#logWorkaround").text("kamel log " + ref)
                 $("#textarea").css("display", "none");
-                $("#logToggle").click(function(){
-                  $("#textarea").slideToggle();
+                $("#logOpen").click(function(){
+                  logContent()
+                  $("#textarea").slideDown();
                   return false;
                 });
+                $("#logClose").click(function(){
+                  $("#textarea").slideUp();
+                  return false;
+                });
+                $("#logRefresh").click(function(){
+                  logContent()
+                  return false;
+                });
+
+                function logContent(){
+                  $.get(apiEndpoint + "/" + ref + "/log", function( data ) {
+                    $("#log").text( data );
+                    $("#log").scrollTop($("#log")[0].scrollHeight);
+                  });
+                }
         })
     </script>
   </head>
@@ -81,10 +96,10 @@
             <table id="properties"></table>
           </div>
           <div>
-            <h3 id="operationsHeader">Operations [start | stop | <span><a href="#" id="logToggle">monitor</a></span>]</h3>
+            <h3 id="operationsHeader">Operations [start | stop | <span><a href="#" id="logOpen">monitor</a></span>]</h3>
             <div id="textarea">
-              <textarea id="log">To be implemented soon!</textarea>
-              <div>Workaround: <code id="logWorkaround"></code></div>
+              <div class="refreshLabel">[<a href="#" id="logRefresh">Refresh</a> | <a href="#" id="logClose">x</a>]</div>
+              <textarea class="log" id="log"></textarea>
             </div>
           </div>
         </div>
