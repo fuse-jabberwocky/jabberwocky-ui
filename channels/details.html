@@ -8,35 +8,31 @@
     <script>
         $(function() {
             var ref = getUrlParameter('ref');
-            $.getJSON("http://localhost:8080/v0/channel")
-                .done(function(list) {
-                    list.forEach(function(elem) {
-                        if (elem.name == ref) {
-                            var instanceList
-                            var instanceHeaderText
-                            $("#channelName").text(elem.name);
-                            $("#channelType").text(elem.type);
-                            $("#configuration").text(elem.configuration);
+            $.getJSON("http://localhost:8080/v0/channel/" + ref)
+                .done(function(elem) {
+                    var instanceList
+                    var instanceHeaderText
+                    $("#channelName").text(elem.name);
+                    $("#channelType").text(elem.type);
+                    $("#configuration").text(elem.configuration);
 
-                            if(elem.eventSources){
-                              $("#instanceSourcesHeader").text("Event sources bound");
-                              elem.eventSources.forEach(function(instance){
-                                var li = "<li><span>" + instance.name + "</span>"
-                                        + "<span>[<a href=\"../instances/details.html?ref=" + instance.name + "&type=source\">watch</a>]</span></li>"
-                                $("#instanceSourcesList").append(li);
-                              });
-                            }
+                    if(elem.eventSources){
+                      $("#instanceSourcesHeader").text("Event sources bound");
+                      elem.eventSources.forEach(function(instance){
+                        var li = "<li><span>" + instance.name + "</span>"
+                                + "<span>[<a href=\"../instances/details.html?ref=" + instance.name + "&type=source\">watch</a>]</span></li>"
+                        $("#instanceSourcesList").append(li);
+                      });
+                    }
 
-                            if(elem.eventSinks){
-                              $("#instanceSinksHeader").text("Event sinks bound");
-                              elem.eventSinks.forEach(function(instance){
-                                var li = "<li><span>" +instance.name + "</span>"
-                                        + "<span>[<a href=\"../instances/details.html?ref=" + instance.name + "&type=sink\">watch</a>]</span></li>"
-                                $("#instanceSinksList").append(li);
-                              });
-                            }
-                        }
-                    });
+                    if(elem.eventSinks){
+                      $("#instanceSinksHeader").text("Event sinks bound");
+                      elem.eventSinks.forEach(function(instance){
+                        var li = "<li><span>" +instance.name + "</span>"
+                                + "<span>[<a href=\"../instances/details.html?ref=" + instance.name + "&type=sink\">watch</a>]</span></li>"
+                        $("#instanceSinksList").append(li);
+                      });
+                    }
                 });
            $("#textarea").css("display", "none");
            $("#configurationToggle").click(function(){

@@ -9,7 +9,7 @@
         $(function() {
             var ref = getUrlParameter('ref');
             var type = getUrlParameter('type');
-            var apiEndpoint = "http://localhost:8080/v0/event" + type
+            var apiEndpoint = "http://localhost:8080/v0/event" + type + "/" + ref
 
             if (type=="source"){
               $("#nameLabel").text("event source");
@@ -18,23 +18,19 @@
             }
 
             $.getJSON(apiEndpoint)
-                .done(function(list) {
-                    list.forEach(function(elem) {
-                        if (elem.name == ref) {
-                            var instanceList
-                            var instanceHeaderText
-                            $("#name").text(elem.name);
-                            $("#connectorRef").html("<a href=\"../connectors/details.html?ref=" + elem.connectorRef + "\">" + elem.connectorRef + "</a>");
-                            $("#channelRef").html("<a href=\"../channels/details.html?ref=" + elem.channelRef + "\">" + elem.channelRef + "</a>");
-                            if (elem.properties){
-                              $("#propertiesHeader").text("Properties configured for this running instance");
-                              $("#properties").append("<tr><th>Name</th><th>Value</th></tr>");
-                              elem.properties.forEach(function(property){
-                                $("#properties").append("<tr><td>" + property.name + "</td><td>" + property.value + "</td></tr>");
-                              });
-                            }
-                        }
-                    });
+                .done(function(elem) {
+                    var instanceList
+                    var instanceHeaderText
+                    $("#name").text(elem.name);
+                    $("#connectorRef").html("<a href=\"../connectors/details.html?ref=" + elem.connectorRef + "\">" + elem.connectorRef + "</a>");
+                    $("#channelRef").html("<a href=\"../channels/details.html?ref=" + elem.channelRef + "\">" + elem.channelRef + "</a>");
+                    if (elem.properties){
+                      $("#propertiesHeader").text("Properties configured for this running instance");
+                      $("#properties").append("<tr><th>Name</th><th>Value</th></tr>");
+                      elem.properties.forEach(function(property){
+                        $("#properties").append("<tr><td>" + property.name + "</td><td>" + property.value + "</td></tr>");
+                      });
+                    }
                 });
 
                 $("#textarea").css("display", "none");
@@ -53,7 +49,7 @@
                 });
 
                 function logContent(){
-                  $.get(apiEndpoint + "/" + ref + "/log", function( data ) {
+                  $.get(apiEndpoint + "/log", function( data ) {
                     $("#log").text( data );
                     $("#log").scrollTop($("#log")[0].scrollHeight);
                   });

@@ -9,41 +9,37 @@
         $(function() {
             var ref = getUrlParameter('ref');
 
-            $.getJSON("http://localhost:8080/v0/connector")
-                .done(function(list) {
-                    list.forEach(function(elem) {
-                        if (elem.name == ref) {
-                            var instanceList
-                            var instanceHeaderText
-                            $("#connectorName").text(elem.name);
-                            $("#connectorType").text(elem.type);
-                            $("#configuration").text(elem.configuration);
-                            if (elem.properties){
-                              elem.properties.forEach(function(property){
-                                $("#connectorProperties").append("<span>" + property + "</span>, ");
-                              });
-                            }
-                            if (elem.type == "source"){
-                              instanceList = elem.eventSourceInstances
-                              instanceHeaderText = "Event source instances running"
-                              $("#createLink").text("run");
-                              $("#createLink").attr("href","../instances/create.html?type=source&connectorRef=" + ref);
-                            } else if (elem.type == "sink") {
-                              instanceList = elem.eventSinkInstances
-                              instanceHeaderText = "Event sink instances running"
-                              $("#createLink").text("run");
-                              $("#createLink").attr("href","../instances/create.html?type=sink&connectorRef=" + ref);
-                            }
+            $.getJSON("http://localhost:8080/v0/connector/" + ref)
+                .done(function(elem) {
+                    var instanceList
+                    var instanceHeaderText
+                    $("#connectorName").text(elem.name);
+                    $("#connectorType").text(elem.type);
+                    $("#configuration").text(elem.configuration);
+                    if (elem.properties){
+                      elem.properties.forEach(function(property){
+                        $("#connectorProperties").append("<span>" + property + "</span>, ");
+                      });
+                    }
+                    if (elem.type == "source"){
+                      instanceList = elem.eventSourceInstances
+                      instanceHeaderText = "Event source instances running"
+                      $("#createLink").text("run");
+                      $("#createLink").attr("href","../instances/create.html?type=source&connectorRef=" + ref);
+                    } else if (elem.type == "sink") {
+                      instanceList = elem.eventSinkInstances
+                      instanceHeaderText = "Event sink instances running"
+                      $("#createLink").text("run");
+                      $("#createLink").attr("href","../instances/create.html?type=sink&connectorRef=" + ref);
+                    }
 
-                            if(instanceList.length > 0){
-                              $("#instanceHeader").text(instanceHeaderText);
-                              instanceList.forEach(function(instance){
-                                $("#instanceList").append("<li><span>" + instance.name + "</span>"
-                                    + "<span>[<a href=\"../instances/details.html?ref=" + instance.name + "&type=" + elem.type + "\">watch</a>]</span></li>");
-                              });
-                            }
-                        }
-                    });
+                    if(instanceList.length > 0){
+                      $("#instanceHeader").text(instanceHeaderText);
+                      instanceList.forEach(function(instance){
+                        $("#instanceList").append("<li><span>" + instance.name + "</span>"
+                            + "<span>[<a href=\"../instances/details.html?ref=" + instance.name + "&type=" + elem.type + "\">watch</a>]</span></li>");
+                      });
+                    }
                 });
                 $("#textarea").css("display", "none");
                 $("#configurationToggle").click(function(){
