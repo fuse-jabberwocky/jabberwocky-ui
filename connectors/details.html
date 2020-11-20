@@ -8,8 +8,9 @@
     <script>
         $(function() {
             var ref = getUrlParameter('ref');
+            var endpoint = "http://localhost:8080/v0/connector/" + ref
 
-            $.getJSON("http://localhost:8080/v0/connector/" + ref)
+            $.getJSON(endpoint)
                 .done(function(elem) {
                     var instanceList
                     var instanceHeaderText
@@ -45,6 +46,22 @@
                 $("#configurationToggle").click(function(){
                   $("#textarea").slideToggle();
                   return false;
+                });
+                $("#deleteLink").click(function(){
+                  if(confirm("You've asked to delete this connector. Are you sure?")){
+                    $.ajax({
+                      url: endpoint,
+                      type: 'DELETE',
+                      complete: function (result) {
+                        if(result.status == 204){
+                          $("#operationResult").text("Connector deleted!");
+                        } else {
+                          $("#operationResult").text("Error "+result.status+": " + result.responseText);
+                        }
+                      }
+                    });
+                    return false;
+                  }
                 });
         })
     </script>
@@ -90,7 +107,8 @@
             <ul id="instanceList"></ul>
           </div>
           <div>
-            <h3 id="operationsHeader">Operations [<a id="createLink"></a>]</h3>
+            <h3 id="operationsHeader">Operations [<a href="#" id="deleteLink">delete</a> | <a id="createLink"></a>]</h3>
+            <div id="operationResult"></div>
           </div>
         </div>
       </main>

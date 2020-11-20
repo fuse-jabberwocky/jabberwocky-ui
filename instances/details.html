@@ -54,6 +54,23 @@
                     $("#log").scrollTop($("#log")[0].scrollHeight);
                   });
                 }
+
+                $("#deleteLink").click(function(){
+                  if(confirm("You've asked to delete this instance. Are you sure?")){
+                    $.ajax({
+                      url: apiEndpoint,
+                      type: 'DELETE',
+                      complete: function (result) {
+                        if(result.status == 204){
+                          $("#operationResult").text("Connector deleted!");
+                        } else {
+                          $("#operationResult").text("Error "+result.status+": " + result.responseText);
+                        }
+                      }
+                    });
+                    return false;
+                  }
+                });
         })
     </script>
   </head>
@@ -92,7 +109,8 @@
             <table id="properties"></table>
           </div>
           <div>
-            <h3 id="operationsHeader">Operations [start | stop | <span><a href="#" id="logOpen">monitor</a></span>]</h3>
+            <h3 id="operationsHeader">Operations [<a href="#" id="deleteLink">delete</a> | <span><a href="#" id="logOpen">monitor</a></span>]</h3>
+            <div id="operationResult"></div>
             <div id="textarea">
               <div class="refreshLabel">[<a href="#" id="logRefresh">Refresh</a> | <a href="#" id="logClose">x</a>]</div>
               <textarea class="log" id="log"></textarea>
